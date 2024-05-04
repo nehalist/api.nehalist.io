@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(morgan("dev"));
 app.use(helmet());
+app.use(cors());
 app.use(express.json());
 app.use(
   rateLimit({
@@ -24,9 +26,9 @@ app.use(
   }),
 );
 
-app.get("/favicon.ico", (req, res) => res.status(204));
+app.get("/favicon.ico", (_, res) => res.status(204));
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   return res.json({ message: "Hello there" });
 });
 
@@ -41,6 +43,7 @@ app.post("/contact", async (req, res) => {
 
     const formData = new FormData();
     formData.append("from", process.env.CONTACT_FROM!);
+    formData.append("h:Reply-To", payload.email);
     formData.append("to", process.env.CONTACT_TO!);
     formData.append("subject", "New contact form submission");
     formData.append(
