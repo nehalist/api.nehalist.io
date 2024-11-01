@@ -65,7 +65,8 @@ app.post("/contact", async (req, res) => {
     );
 
     return res.json({ success: response.status === 200 });
-  } catch {
+  } catch (e) {
+    console.error(e);
     return res.status(400).json({ success: false });
   }
 });
